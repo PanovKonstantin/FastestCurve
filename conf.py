@@ -1,5 +1,6 @@
 from math import sqrt, cos, sin, log10, atan2, pi
-import sys, pygame
+import sys
+import pygame
 from unittest.mock import DEFAULT
 import numpy as np
 SIZE = WIDTH, HEIGHT = 1280, 720
@@ -35,20 +36,25 @@ T_START = -3/2*pi + 0.1
 T_FINISH = pi/2 + 0.1
 T_NUM = 10000
 POINT_R = 10
+
+
 def curve(t):
     x = cos(t)
     y = sin(t)
     return np.array((x, y))
+
 
 def coord_to_screen(xy, minx=0, maxy=0):
     x = xy[0] - minx
     y = -xy[1] + maxy
     return np.array([x, y])
 
+
 def screen_to_coord(xy, minx=0, maxy=0):
     x = xy[0] + minx
-    y = maxy - xy[1] 
+    y = maxy - xy[1]
     return np.array([x, y])
+
 
 DEFAULT_POINTS3 = [(0, 200), (100, 0), (200, 200)]
 DEFAULT_POINTS4 = [(0, 200), (50, 0), (0, 50), (200, 200)]

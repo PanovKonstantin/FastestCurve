@@ -1,7 +1,8 @@
 import numpy as np
-from point import *
-from bezier import *
-from conf import *
+from point import Point
+from bezier import Bezier
+from conf import parameters, GRAPH_STEP
+
 
 class Slide:
     def __init__(self, equation=None, points=[]) -> None:
@@ -11,7 +12,7 @@ class Slide:
         self.selected = False
         self.init_curve()
         self.init_point()
-    
+
     def init_curve(self):
         self.curve = Bezier(self.points)
 
@@ -32,12 +33,12 @@ class Slide:
         if not self.is_pause:
             self.is_pause = True
             self.point.pause()
-    
+
     def resume(self):
         if self.is_pause:
             self.is_pause = False
             self.point.resume()
-    
+
     def reset(self):
         self.curve.redraw()
         self.point.reset()

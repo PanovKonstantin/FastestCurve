@@ -1,8 +1,9 @@
 from math import floor
-from re import T
 import pygame
 from draggable_point import DraggablePoint
-from conf import *
+from conf import BLACK, my_font15, my_font10, screen_to_coord, screen
+import numpy as np
+
 
 class Slider:
     def __init__(self, name, pos, size, min_value, max_value, init_value, callback) -> None:
@@ -15,7 +16,7 @@ class Slider:
         self.callback = callback
         self.init_surface()
         self.init_drag_point()
-    
+
     def init_surface(self):
         self.surface = pygame.Surface(self.size, pygame.SRCALPHA, 32)
         self.surface = self.surface.convert_alpha()
@@ -34,29 +35,31 @@ class Slider:
             pygame.draw.line(self.surface, BLACK, start, end, 1)
 
             y_axis = (self.min_v + i * (self.max_v - self.min_v)/n)
-            if (abs(y_axis) < 1): text = "{:.1f}".format(y_axis)
-            else: text = f"{floor(y_axis)}"
+            if (abs(y_axis) < 1):
+                text = "{:.1f}".format(y_axis)
+            else:
+                text = f"{floor(y_axis)}"
             text = my_font10.render(text, True, BLACK)
             self.surface.blit(text, xy + np.array([-text.get_width()/2, 5]))
-
 
     def init_drag_point(self):
         self.xy = np.array((self.value_to_screen(self.v), self.size[1]/2))
         self.screen_xy = self.rectangle.move(self.xy)
-        self.drag = DraggablePoint(screen_to_coord(self.screen_xy) + np.array([5, 0]), 0, 0, 0)
+        self.drag = DraggablePoint(screen_to_coord(
+            self.screen_xy) + np.array([5, 0]), 0, 0, 0)
         self.drag.set_constraints(self.pos[0], self.pos[0] + self.size[0],
                                   self.pos[1], self.pos[1] + self.size[1])
 
     def value_to_screen(self, value):
         return self.size[0] * (value - self.min_v) / (self.max_v - self.min_v)
-    
+
     def screen_to_value(self, screen_x):
-        return self.min_v + (screen_x - self.pos[0])  * (self.max_v - self.min_v)/ self.size[0]
+        return self.min_v + (screen_x - self.pos[0]) * (self.max_v - self.min_v) / self.size[0]
 
     def blit(self):
         screen.blit(self.surface, self.rectangle)
         self.drag.blit()
-    
+
     def reset(self, quick=False):
         self.screen_xy = self.drag.screen_xy
         self.screen_xy[1] = self.pos[1] + self.size[1]/2
